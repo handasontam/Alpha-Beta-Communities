@@ -294,6 +294,8 @@ class ABCommunity(object):
         """
         # self.solutions = {}  # key: alpha lower bound, value: frozenset(frozenset(), ...), not include singleton
         self.solutions = HierarchichalPartitionSolution({})
+        self.ignore_nodes = HierarchicalCommunitySolution({})
+        alpha_prime = -np.inf
 
         B, alphas = self.find_dominate_community(ignore_nodes=self.ignore_nodes.get_value_by_alpha(alpha_prime))
         B_alpha = {round(alphas[cardinality], 8): B[cardinality] for cardinality in B.keys()}
@@ -306,8 +308,6 @@ class ABCommunity(object):
                 if not c.issubset(self.ignore_nodes.get_value_by_alpha(alpha)):
                     self.solutions.add_solution(alpha, c)
                 self.ignore_nodes.add_solution(alpha, c)
-        if not self.find_weaker_cluster:
-            break
         
         self.solutions.remove_duplicate()
         self.solutions = self.solutions.get_dict()
